@@ -5,12 +5,12 @@ import "./globals.css";
 const raleway = Raleway({
   subsets: ["latin"],
   variable: "--font-raleway",
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["300", "400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
-  title: "Edwin Anderson | Frontend Developer",
-  description: "Portfolio Edwin Anderson, Frontend Developer.",
+  title: "Irwin Ibrahim | Frontend Developer",
+  description: "Portfolio Irwin Ibrahim, Frontend Developer.",
 };
 
 export default function RootLayout({

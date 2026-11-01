@@ -7,6 +7,8 @@ import WhyChooseSection from "@/components/WhyChooseSection";
 import ProjectsSection from "@/components/ProjectsSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import FaqSection from "@/components/FaqSection";
+import ContactSection from "@/components/ContactSection";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -37,8 +39,30 @@ export default function Home() {
         <FaqSection />
       </div>
 
-      {/* Get in Touch */}
-      {/* <div id="contact" className="scroll-mt-20"><ContactSection /></div> */}
+      {/* Get in Touch + Footer: satu latar dengan cahaya ungu yang menyambung */}
+      <div className="relative isolate overflow-hidden bg-black">
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 md:hidden"
+          style={{
+            background:
+              "radial-gradient(ellipse 140% 380px at 50% 100%, rgba(105,40,175,0.5) 0%, rgba(105,40,175,0.3) 40%, transparent 100%)",
+          }}
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 hidden md:block"
+          style={{
+            background:
+              "radial-gradient(ellipse 110% 110% at 100% 100%, rgba(105,35,165,0.5) 0%, rgba(105,35,165,0.28) 40%, transparent 100%)",
+          }}
+        />
+
+        <div id="contact" className="scroll-mt-20">
+          <ContactSection />
+        </div>
+        <Footer />
+      </div>
     </main>
   );
 }

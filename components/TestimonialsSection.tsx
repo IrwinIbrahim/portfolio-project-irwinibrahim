@@ -2,42 +2,13 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { motion, type Variants } from "framer-motion";
+import { motion } from "framer-motion";
+import SectionHeading, { MobileBreak } from "@/components/SectionHeading";
+import { TESTIMONIALS } from "@/lib/data";
+import { fadeUp, reveal } from "@/lib/motion";
+import { container } from "@/lib/styles";
+import { cn } from "@/lib/utils";
 
-const TESTIMONIALS = [
-  { company: "Airbnb", logo: "/icons/airbnb-white.svg" },
-  { company: "Coinbase", logo: "/icons/coinbase-white.svg" },
-  { company: "Webflow", logo: "/icons/webflow-white.svg" },
-].map((item) => ({
-  ...item,
-  rating: 5,
-  quote:
-    '"Edwin delivered clean and efficient code that made our app load faster and feel smoother. He\'s a pleasure to work with."',
-  name: "Sarah Liem",
-  role: "Product Manager at Techlynk",
-}));
-
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  show: (i: number = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, delay: i * 0.12, ease: "easeOut" },
-  }),
-};
-
-const reveal = {
-  initial: "hidden",
-  whileInView: "show",
-  viewport: { once: true, amount: 0.2 },
-} as const;
-
-/*
-  Mobile  : carousel geser (scroll-snap) 1 kartu per layar + indikator titik.
-  Desktop : (md+) 3 kartu sejajar. Indikator titik tetap tampil seperti desain;
-            titik aktif mengikuti kartu yang sedang di-hover.
-  Ukuran desktop memakai clamp(min, vw, max) berdasarkan desain Figma 1440px.
-*/
 export default function TestimonialsSection() {
   const scrollerRef = useRef<HTMLUListElement>(null);
   const [active, setActive] = useState(0);
@@ -53,8 +24,7 @@ export default function TestimonialsSection() {
   const goTo = (index: number) => {
     const el = scrollerRef.current;
     setActive(index);
-    if (!el) return;
-    el.scrollTo({
+    el?.scrollTo({
       left: (el.scrollWidth / TESTIMONIALS.length) * index,
       behavior: "smooth",
     });
@@ -62,26 +32,21 @@ export default function TestimonialsSection() {
 
   return (
     <section className="bg-black text-white">
-      <div className="mx-auto max-w-360 px-4 pb-10 pt-12 md:px-8 lg:px-[clamp(40px,8.33vw,120px)] lg:pb-24 lg:pt-22">
-        {/* Heading */}
-        <motion.h2
-          variants={fadeUp}
-          custom={0}
-          {...reveal}
-          className="text-center text-[26px] font-bold leading-[1.4] lg:text-[clamp(32px,2.78vw,40px)] lg:leading-[1.2]"
-        >
-          Trusted by Teams, Valued
-          <br className="md:hidden" /> by Clients
-        </motion.h2>
-        <motion.p
-          variants={fadeUp}
-          custom={1}
-          {...reveal}
-          className="mt-2 text-center text-[13px] font-light leading-7 text-white/60 lg:mt-6 lg:text-[clamp(14px,1.11vw,16px)] lg:leading-6"
-        >
-          A few kind words from the people behind the projects
-          <br className="md:hidden" /> Edwin helped bring to life.
-        </motion.p>
+      <div className={cn(container, "pb-10 pt-12 lg:pb-24 lg:pt-22")}>
+        <SectionHeading
+          title={
+            <>
+              Trusted by Teams, Valued
+              <MobileBreak /> by Clients
+            </>
+          }
+          subtitle={
+            <>
+              A few kind words from the people behind the projects
+              <MobileBreak /> Edwin helped bring to life.
+            </>
+          }
+        />
 
         <motion.div
           variants={fadeUp}
@@ -93,14 +58,14 @@ export default function TestimonialsSection() {
           <ul
             ref={scrollerRef}
             onScroll={handleScroll}
-            className="flex snap-x snap-mandatory gap-4 overflow-x-auto scrollbar-none md:grid md:grid-cols-3 md:gap-5 md:overflow-visible [&::-webkit-scrollbar]:hidden"
+            className="flex snap-x snap-mandatory gap-4 overflow-x-auto scrollbar-none md:grid md:grid-cols-3 md:gap-4 md:overflow-visible xl:gap-5 [&::-webkit-scrollbar]:hidden"
           >
             {TESTIMONIALS.map((t, i) => (
               <motion.li
                 key={t.company}
                 whileHover={{ y: -4 }}
                 onMouseEnter={() => setActive(i)}
-                className="flex min-h-87.75 shrink-0 basis-full snap-center flex-col rounded-[20px] border border-white/10 bg-black px-4 pb-4.5 pt-5 transition-colors duration-300 hover:border-white/25 md:min-h-[clamp(300px,27.5vw,396px)] md:basis-auto md:px-5 md:pb-6 md:pt-6"
+                className="flex min-h-87.75 shrink-0 basis-full snap-center flex-col rounded-[20px] border border-white/10 bg-black px-4 pb-4.5 pt-5 transition-colors duration-300 hover:border-white/25 sm:px-6 md:min-h-[clamp(300px,27.5vw,396px)] md:basis-auto md:px-5 md:pb-6 md:pt-6"
                 style={{
                   backgroundImage:
                     "radial-gradient(ellipse 60% 55% at 15% 8%, rgba(95,30,135,0.65) 0%, transparent 100%)",
@@ -157,11 +122,12 @@ export default function TestimonialsSection() {
                 aria-label={`Lihat testimoni ${t.company}`}
                 aria-current={active === i}
                 onClick={() => goTo(i)}
-                className={`h-2 rounded-full transition-all duration-300 md:h-3 ${
+                className={cn(
+                  "h-2 rounded-full transition-all duration-300 md:h-3",
                   active === i
                     ? "w-6 bg-[#6d2fa3] md:w-12"
-                    : "w-3 bg-[#2a2d35] hover:bg-[#3a3e49] md:w-5.5"
-                }`}
+                    : "w-3 bg-[#2a2d35] hover:bg-[#3a3e49] md:w-5.5",
+                )}
               />
             ))}
           </div>

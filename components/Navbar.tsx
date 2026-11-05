@@ -5,14 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { Button } from "@/components/ui/button";
-
-const NAV_LINKS = [
-  { label: "Home", href: "#home" },
-  { label: "About", href: "#about" },
-  { label: "Skill", href: "#skill" },
-  { label: "Projects", href: "#projects" },
-  { label: "FAQ", href: "#faq" },
-];
+import { NAV_LINKS } from "@/lib/data";
+import { container } from "@/lib/styles";
+import { cn } from "@/lib/utils";
 
 const listVariants: Variants = {
   hidden: {},
@@ -28,7 +23,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // Background halus saat scroll
+  // Latar blur halus setelah halaman di-scroll
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
@@ -36,7 +31,7 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Kunci scroll body + tutup dengan Escape saat menu terbuka
+  // Kunci scroll body + tutup dengan Escape saat menu mobile terbuka
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
@@ -47,7 +42,7 @@ export default function Navbar() {
     };
   }, [open]);
 
-  // Tutup menu saat layar masuk breakpoint desktop
+  // Tutup menu mobile saat layar masuk breakpoint desktop
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 1024px)");
     const onChange = (e: MediaQueryListEvent) => e.matches && setOpen(false);
@@ -57,15 +52,19 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
         scrolled && !open
           ? "bg-[#1a0630]/60 backdrop-blur-md"
-          : "bg-transparent"
-      }`}
+          : "bg-transparent",
+      )}
     >
       <nav
         aria-label="Navigasi utama"
-        className="relative z-50 mx-auto flex h-20 max-w-360 items-center justify-between px-4 md:px-8 lg:px-[clamp(40px,8.33vw,120px)]"
+        className={cn(
+          container,
+          "relative z-50 flex h-20 items-center justify-between",
+        )}
       >
         {/* Logo */}
         <Link
@@ -80,7 +79,7 @@ export default function Navbar() {
           >
             <Image
               src="/icons/logo-star.svg"
-              alt=""
+              alt="Logo Star"
               width={36}
               height={36}
               className="size-7 lg:size-9"
@@ -92,8 +91,8 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Menu desktop */}
-        <ul className="hidden items-center gap-10 lg:absolute lg:left-1/2 lg:flex lg:-translate-x-1/2">
+        {/* Menu desktop: jarak antarmenu melebar di xl */}
+        <ul className="hidden items-center gap-6 lg:absolute lg:left-1/2 lg:flex lg:-translate-x-1/2 xl:gap-10">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
               <motion.div whileHover={{ y: -2 }} className="group relative">
@@ -117,7 +116,7 @@ export default function Navbar() {
         >
           <Button
             asChild
-            className="h-11 rounded-lg bg-white px-8 text-sm font-medium text-black hover:bg-white/90"
+            className="h-11 rounded-lg bg-white px-6 text-sm font-medium text-black hover:bg-white/90 xl:px-8"
           >
             <Link href="#contact">Get in Touch</Link>
           </Button>
@@ -148,8 +147,8 @@ export default function Navbar() {
                     : "/icons/hamburger-button.svg"
                 }
                 alt=""
-                width={24}
-                height={24}
+                width={32}
+                height={32}
               />
             </motion.span>
           </AnimatePresence>
@@ -165,7 +164,7 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 overflow-y-auto bg-black px-4 pt-24 md:px-8 lg:hidden"
+            className="fixed inset-0 z-40 overflow-y-auto bg-black px-4 pt-24 sm:px-6 md:px-8 lg:hidden"
           >
             <motion.ul
               variants={listVariants}

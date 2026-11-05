@@ -1,0 +1,6 @@
+/* Popup: latar gelap 60% tanpa blur, sesuai desain Figma */
+[data-slot="dialog-overlay"] {
+  background-color: rgb(0 0 0 / 0.6);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}

@@ -2,43 +2,17 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion, type Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
+import { SOCIALS } from "@/lib/data";
+import { fadeUp, reveal } from "@/lib/motion";
+import { container } from "@/lib/styles";
+import { cn } from "@/lib/utils";
 
-const SOCIALS = [
-  {
-    name: "Facebook",
-    icon: "/icons/facebook.svg",
-    href: "https://facebook.com",
-  },
-  {
-    name: "Instagram",
-    icon: "/icons/instagram.svg",
-    href: "https://instagram.com",
-  },
-  {
-    name: "LinkedIn",
-    icon: "/icons/linkedIn.svg",
-    href: "https://linkedin.com",
-  },
-  { name: "TikTok", icon: "/icons/tiktok.svg", href: "https://tiktok.com" },
-];
-
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  show: (i: number = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, delay: i * 0.12, ease: "easeOut" },
-  }),
-};
-
-const reveal = {
-  initial: "hidden",
-  whileInView: "show",
-  viewport: { once: true, amount: 0.3 },
-} as const;
-
+/*
+  Desktop (lg+): desain Figma 1440px. Ukuran memakai clamp(min, vw, max)
+  sehingga proporsional di layar < 1440px dan persis desain di >= 1440px.
+*/
 export default function HeroSection() {
   return (
     <section
@@ -49,7 +23,13 @@ export default function HeroSection() {
       <div aria-hidden className="hero-bg absolute inset-0 -z-20" />
       <div aria-hidden className="hero-grid absolute inset-0 -z-10" />
 
-      <div className="mx-auto flex max-w-360 flex-col px-4 pb-40 pt-28 md:px-8 lg:grid lg:min-h-[inherit] lg:grid-cols-[minmax(0,1fr)_clamp(260px,26.6vw,383px)_minmax(0,1fr)] lg:items-center lg:px-[clamp(40px,8.33vw,120px)] lg:pb-24 lg:pt-47.5">
+      <div
+        className={cn(
+          container,
+          "flex flex-col pb-40 pt-28",
+          "lg:grid lg:min-h-[inherit] lg:grid-cols-[minmax(0,1fr)_clamp(260px,26.6vw,383px)_minmax(0,1fr)] lg:items-center lg:pb-24 lg:pt-47.5",
+        )}
+      >
         {/* ===== Foto (arch) ===== */}
         <motion.div
           initial={{ opacity: 0, scale: 0.94 }}
@@ -61,7 +41,7 @@ export default function HeroSection() {
           {/* Watermark */}
           <span
             aria-hidden
-            className="pointer-events-none absolute -top-9 left-1/2 -z-10 -translate-x-1/2 select-none whitespace-nowrap text-[clamp(52px,16vw,96px)] font-extrabold leading-none text-white/10 md:text-[clamp(96px,14vw,120px)] lg:top-[clamp(-74px,-5.1vw,-44px)] lg:text-[clamp(80px,10vw,144px)]"
+            className="pointer-events-none absolute -top-9 left-1/2 -z-10 -translate-x-1/2 select-none whitespace-nowrap text-[55.47px] font-bold leading-[70.2px] tracking-[-5%] text-white/10 md:text-[clamp(96px,14vw,120px)] lg:top-[clamp(-74px,-5.1vw,-44px)] lg:text-[clamp(80px,10vw,144px)]"
           >
             PORTOFOLIO
           </span>
@@ -85,7 +65,7 @@ export default function HeroSection() {
           >
             <Image
               src="/icons/logo-star.svg"
-              alt=""
+              alt="Logo Star"
               width={123}
               height={123}
               className="size-full"
@@ -96,7 +76,7 @@ export default function HeroSection() {
           <motion.div
             whileHover={{ rotate: 12, scale: 1.06 }}
             transition={{ type: "spring", stiffness: 200, damping: 14 }}
-            className="absolute -bottom-12 -right-5 z-20 size-20 overflow-hidden rounded-full bg-white lg:bottom-[-4%] lg:right-[-14.6%] lg:size-auto lg:w-[31.3%] lg:aspect-square"
+            className="absolute -bottom-12 -right-5 z-20 size-24.25 overflow-hidden rounded-full bg-white lg:bottom-[-4%] lg:right-[-14.6%] lg:size-auto lg:w-[31.3%] lg:aspect-square"
           >
             <Image
               src="/icons/expert-frontend.svg"

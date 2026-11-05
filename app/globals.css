@@ -181,3 +181,10 @@ body {
   background-size: 44px 44px;
   mask-image: linear-gradient(180deg, #000 0%, #000 60%, transparent 100%);
 }
+
+/* Popup: latar gelap 60% tanpa blur */
+[data-slot="dialog-overlay"] {
+  background-color: rgb(0 0 0 / 0.6);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}

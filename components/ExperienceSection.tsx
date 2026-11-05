@@ -2,59 +2,19 @@
 
 import Image from "next/image";
 import { motion, type Variants } from "framer-motion";
-
-const EXPERIENCES = [
-  { period: "2025 - Present", company: "Airbnb", logo: "/icons/airbnb.svg" },
-  {
-    period: "2025 - Present",
-    company: "Coinbase",
-    logo: "/icons/coinbase.svg",
-  },
-  { period: "2025 - Present", company: "Webflow", logo: "/icons/webflow.svg" },
-];
-
-const RESPONSIBILITIES = [
-  "Develop responsive and user-friendly web interfaces using modern frontend technologies.",
-  "Collaborate with UI/UX designers to turn design mockups into functional components.",
-  "Optimize web applications for maximum speed and scalability.",
-  "Ensure cross-browser and cross-platform compatibility.",
-  "Implement reusable code and component libraries for future use.",
-];
+import SectionHeading, { MobileBreak } from "@/components/SectionHeading";
+import { EXPERIENCES, RESPONSIBILITIES } from "@/lib/data";
+import { reveal, slideIn, staggerCard } from "@/lib/motion";
+import { container } from "@/lib/styles";
+import { cn } from "@/lib/utils";
 
 /* Ukuran titik & jarak titik ke kartu (otomatis mengecil/membesar) */
 const DOT = "clamp(24px, 2.22vw, 32px)";
 const GAP_TO_CARD = "clamp(12px, 1.74vw, 25px)";
 const CARD_GAP = 20; // jarak antar kartu (px)
+const LINE_COLOR = "rgba(255,255,255,0.18)";
 
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  show: (i: number = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, delay: i * 0.1, ease: "easeOut" },
-  }),
-};
-
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 32 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.7,
-      ease: "easeOut",
-      staggerChildren: 0.07,
-      delayChildren: 0.25,
-    },
-  },
-};
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, x: -12 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.4, ease: "easeOut" } },
-};
-
-/* Titik + garis diatur oleh <li> induknya */
+/* Titik + garis dianimasikan oleh <li> induknya */
 const rowVariants: Variants = { hidden: {}, show: {} };
 
 const dotVariants: Variants = {
@@ -73,13 +33,9 @@ const lineVariants: Variants = {
   },
 };
 
-const reveal = {
-  initial: "hidden",
-  whileInView: "show",
-  viewport: { once: true, amount: 0.2 },
-} as const;
-
-const LINE_COLOR = "rgba(255,255,255,0.18)";
+/* Cahaya ungu di kiri atas kartu pertama */
+const GLOW =
+  "radial-gradient(ellipse clamp(300px, 32vw, 460px) clamp(130px, 12vw, 170px) at clamp(60px, 8vw, 120px) 20px, rgba(95,30,135,0.6) 0%, transparent 100%)";
 
 /*
   Layout dua kolom di dalam kartu aktif mulai breakpoint md (768px).
@@ -88,26 +44,16 @@ const LINE_COLOR = "rgba(255,255,255,0.18)";
 export default function ExperienceSection() {
   return (
     <section className="bg-black text-white">
-      <div className="mx-auto max-w-360 px-4 pb-10 pt-12 md:px-8 lg:px-[clamp(40px,8.33vw,120px)] lg:pb-24 lg:pt-18">
-        {/* Heading */}
-        <motion.h2
-          variants={fadeUp}
-          custom={0}
-          {...reveal}
-          className="text-center text-[26px] font-bold leading-[1.4] lg:text-[clamp(32px,2.78vw,40px)] lg:leading-[1.2]"
-        >
-          Years of Building, Learning,
-          <br className="md:hidden" /> and Shipping
-        </motion.h2>
-        <motion.p
-          variants={fadeUp}
-          custom={1}
-          {...reveal}
-          className="mt-2 text-center text-[13px] font-light leading-7 text-white/60 lg:mt-6 lg:text-[clamp(14px,1.11vw,16px)] lg:leading-6"
-        >
-          Each role has sharpened my ability to build better digital
-          experiences, faster.
-        </motion.p>
+      <div className={cn(container, "pb-10 pt-12 lg:pb-24 lg:pt-18")}>
+        <SectionHeading
+          title={
+            <>
+              Years of Building, Learning,
+              <MobileBreak /> and Shipping
+            </>
+          }
+          subtitle="Each role has sharpened my ability to build better digital experiences, faster."
+        />
 
         {/* Timeline */}
         <ol
@@ -116,6 +62,14 @@ export default function ExperienceSection() {
         >
           {EXPERIENCES.map((exp, index) => {
             const isLast = index === EXPERIENCES.length - 1;
+            const lineStyle = {
+              position: "absolute",
+              left: `calc(${DOT} / 2 - 1px)`,
+              top: `calc(${DOT} / 2)`,
+              width: 2,
+              background: LINE_COLOR,
+              transformOrigin: "top",
+            } as const;
 
             return (
               <motion.li
@@ -146,55 +100,24 @@ export default function ExperienceSection() {
                   />
                 </motion.span>
 
-                {/* Garis penghubung ke titik berikutnya */}
-                {!isLast && (
-                  <motion.span
-                    aria-hidden
-                    variants={lineVariants}
-                    style={{
-                      position: "absolute",
-                      left: `calc(${DOT} / 2 - 1px)`,
-                      top: `calc(${DOT} / 2)`,
-                      bottom: `calc(-${CARD_GAP}px - ${DOT} / 2)`,
-                      width: 2,
-                      background: LINE_COLOR,
-                      transformOrigin: "top",
-                    }}
-                  />
-                )}
-
-                {/* Garis terakhir: hanya di mobile, memanjang sampai bawah section */}
-                {isLast && (
-                  <motion.span
-                    aria-hidden
-                    variants={lineVariants}
-                    className="md:hidden"
-                    style={{
-                      position: "absolute",
-                      left: `calc(${DOT} / 2 - 1px)`,
-                      top: `calc(${DOT} / 2)`,
-                      bottom: -40,
-                      width: 2,
-                      background: LINE_COLOR,
-                      transformOrigin: "top",
-                    }}
-                  />
-                )}
+                {/* Garis penghubung ke titik berikutnya. Di kartu terakhir hanya tampil di mobile. */}
+                <motion.span
+                  aria-hidden
+                  variants={lineVariants}
+                  className={isLast ? "md:hidden" : undefined}
+                  style={{
+                    ...lineStyle,
+                    bottom: isLast ? -40 : `calc(-${CARD_GAP}px - ${DOT} / 2)`,
+                  }}
+                />
 
                 {/* Kartu */}
                 <motion.article
-                  variants={cardVariants}
+                  variants={staggerCard}
                   {...reveal}
                   whileHover={{ y: -3 }}
-                  className="min-w-0 rounded-2xl border border-white/15 bg-black px-4 pb-4 pt-5.5 transition-colors duration-300 hover:border-white/30 md:py-[clamp(20px,1.94vw,28px)] md:pl-6 md:pr-7"
-                  style={
-                    index === 0
-                      ? {
-                          backgroundImage:
-                            "radial-gradient(ellipse clamp(300px, 32vw, 460px) clamp(130px, 12vw, 170px) at clamp(60px, 8vw, 120px) 20px, rgba(95,30,135,0.6) 0%, transparent 100%)",
-                        }
-                      : undefined
-                  }
+                  className="min-w-0 rounded-2xl border border-white/15 bg-black px-4 pb-4 pt-5.5 transition-colors duration-300 hover:border-white/30 sm:px-5 md:py-[clamp(20px,1.94vw,28px)] md:pl-6 md:pr-7"
+                  style={index === 0 ? { backgroundImage: GLOW } : undefined}
                 >
                   <div className="md:grid md:grid-cols-[clamp(120px,10.5vw,151px)_minmax(0,1fr)] md:items-start">
                     {/* Periode + logo perusahaan */}
@@ -216,7 +139,7 @@ export default function ExperienceSection() {
                       {RESPONSIBILITIES.map((item) => (
                         <motion.li
                           key={item}
-                          variants={itemVariants}
+                          variants={slideIn}
                           className="flex items-center gap-3 text-[13px] leading-7 text-white md:text-[clamp(11px,0.97vw,14px)] md:leading-[clamp(18px,1.53vw,22px)]"
                         >
                           <Image
